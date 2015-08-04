@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 public class ReceiptGeneration {
 
 	static String input = null;
@@ -15,7 +17,7 @@ public class ReceiptGeneration {
 	public static void main(String[] args) {
 
 		ReceiptGeneration receiptGeneration = new ReceiptGeneration();
-		List<Item> itemObject = new ArrayList<Item>();		
+		List<Item> itemObject = new ArrayList<Item>();
 
 		System.out.println("Please Enter the Item/Quantity");
 
@@ -29,8 +31,30 @@ public class ReceiptGeneration {
 		}
 
 		itemObject = receiptGeneration.getItemQauntity();
+		receiptGeneration.generateReceipt(itemObject);
 	}
-	
+
+	public void generateReceipt(List<Item> itemList) {
+
+		float total = 0;
+
+		System.out.println("Customer Receipt");
+		System.out.format("%15s%10s%10s", "Item", "Quantity", "Cost");
+
+		System.out.println("\n--------------------------------------");
+
+		for (Item item : itemList) {
+			System.out.format("%15s%10d%10.2f", item.getName(),
+					item.getQuantity(), item.getValue() * item.getQuantity());
+			System.out.println("\n");
+			total += item.getValue() * item.getQuantity();
+		}
+
+		System.out.println("\n-------------------------------------");
+		System.out.format("%8s%3.2f", "Total £", total);
+
+	}
+
 	public List<Item> getItemQauntity() {
 
 		List<Item> itemObject = new ArrayList<Item>();
