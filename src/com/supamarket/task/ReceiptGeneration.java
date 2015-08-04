@@ -6,8 +6,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 public class ReceiptGeneration {
 
 	static String input = null;
@@ -18,6 +16,7 @@ public class ReceiptGeneration {
 
 		ReceiptGeneration receiptGeneration = new ReceiptGeneration();
 		List<Item> itemObject = new ArrayList<Item>();
+		List<Item> offerItemList = new ArrayList<Item>();
 
 		System.out.println("Please Enter the Item/Quantity");
 
@@ -31,7 +30,73 @@ public class ReceiptGeneration {
 		}
 
 		itemObject = receiptGeneration.getItemQauntity();
-		receiptGeneration.generateReceipt(itemObject);
+		Item item = new Item();
+		item.setName("Frozen Pizza");
+
+		offerItemList = receiptGeneration.twoForOne(item);
+		receiptGeneration.generateTwoForOneReceipt(itemObject, offerItemList);
+	}
+
+	public List<Item> twoForOne(Item item) {
+		List<Item> offerItemList = new ArrayList<Item>();
+		offerItemList.add(item);
+		return offerItemList;
+	}
+
+	public void generateTwoForOneReceipt(List<Item> itemList,
+			List<Item> offerItemsList) {
+
+		float total = 0;
+		float discount = 0.00f;
+
+		System.out.println("Customer Receipt");
+		System.out.format("%15s%10s%10s", "Item", "Quantity", "Cost");
+
+		System.out.println("\n--------------------------------------");
+
+		for (Item item : itemList) {
+
+			for (Item item2 : offerItemsList) {
+
+				if (item.getName().trim()
+						.equalsIgnoreCase(item2.getName().trim())) {
+
+					if (item.getQuantity() >= 2 && item.getQuantity() % 2 == 0) {
+
+						System.out.format("%15s%10d%10.2f", item.getName(),
+								item.getQuantity(),
+								item.getValue() * item.getQuantity());
+						System.out.println("\n");
+						total += item.getValue() * item.getQuantity() / 2;
+						discount += item.getValue() * item.getQuantity() / 2;
+
+					} else {
+
+						System.out.format("%15s%10d%10.2f", item.getName(),
+								item.getQuantity(),
+								item.getValue() * item.getQuantity());
+						System.out.println("\n");
+						total += item.getValue() * (item.getQuantity() % 2 + 1);
+						discount += item.getValue() * (item.getQuantity() % 2);
+					}
+
+				} else {
+
+					System.out.format("%15s%10d%10.2f", item.getName(),
+							item.getQuantity(),
+							item.getValue() * item.getQuantity());
+					System.out.println("\n");
+					total += item.getValue() * item.getQuantity();
+				}
+			}
+		}
+
+		if (discount != 0.00) {
+			System.out.println("2 for 1 discount -" + discount);
+		}
+		System.out.println("\n-------------------------------------");
+		System.out.format("%8s%3.2f", "Total £", total);
+
 	}
 
 	public void generateReceipt(List<Item> itemList) {
